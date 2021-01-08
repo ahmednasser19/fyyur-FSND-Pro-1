@@ -89,21 +89,19 @@
 
 		const url = `/artists/${artist_id}/delete`;
 		request_delete.open('GET', url);    // DELETE method is archaic and not really used in practice.
-		// To make this work, you need to enable CORS headers which in practice
-		// is easier to screw up and introduce security vulnerabilities!
-
-		// Callback on return
+	
+	
 		request_delete.onload = () => {
-			// Extract JSON data from request
+			
 			const data = JSON.parse(request_delete.responseText);
 
-			// If delete was successful, redirect
+		
 			if (data['deleted'] == true) {
 				window.location.href = data['url'];
 			}
 		}
 
-		// Actually send the request
+		
 		request_delete.send(null);   // No data, url request
 		return false;
 
