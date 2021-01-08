@@ -179,7 +179,7 @@ def search_venues():
             if show.start_time > now:
                 num_upcoming += 1
 
-        venue_list.append({ "id": venue.id, "name": venue.name, "num_upcoming_shows": num_upcoming  })
+        venue_list.append({ "id": venue.id, "name": venue.name, "number_upcoming_shows": num_upcoming  })
     response = { "count": len(venues), "data": venue_list }
     
     return render_template('pages/search_venues.html', results=response, search_term=search_term)
