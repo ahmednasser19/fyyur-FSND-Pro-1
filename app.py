@@ -131,28 +131,19 @@ def index():
 def venues():
     
     venues = Venue.query.all()
-
     data = []   
-
-    # Create a set of all the cities/states combinations uniquely
     cities_states = set()
     for venue in venues:
-        cities_states.add( (venue.city, venue.state) )  # Add tuple
-    
-    # Turn the set into an ordered list
-    cities_states = list(cities_states)
+        cities_states.add( (venue.city, venue.state) )  
+        cities_states = list(cities_states)
     cities_states.sort(key=itemgetter(1,0))    
-
-    now = datetime.now()    
-
-    
-    for loc in cities_states:
+    now = datetime.now()     
+    for location in cities_states:
        
         venues_list = []
         for venue in venues:
-            if (venue.city == loc[0]) and (venue.state == loc[1]):
-
-                
+            if (venue.city == location[0]) and (venue.state == location[1]):
+ 
                 venue_shows = Show.query.filter_by(venue_id=venue.id).all()
                 num_upcoming = 0
                 for show in venue_shows:
@@ -164,11 +155,10 @@ def venues():
                     "name": venue.name,
                     "num_upcoming_shows": num_upcoming
                 })
-
         
         data.append({
-            "city": loc[0],
-            "state": loc[1],
+            "city": location[0],
+            "state": location[1],
             "venues": venues_list
         })
 
@@ -179,10 +169,7 @@ def venues():
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
     search_term = request.form.get('search_term', '').strip()
-
-  
     venues = Venue.query.filter(Venue.name.ilike('%' + search_term + '%')).all()   
-    #print(venues)
     venue_list = []
     now = datetime.now()
     for venue in venues:
@@ -192,16 +179,8 @@ def search_venues():
             if show.start_time > now:
                 num_upcoming += 1
 
-        venue_list.append({
-            "id": venue.id,
-            "name": venue.name,
-            "num_upcoming_shows": num_upcoming  
-        })
-
-    response = {
-        "count": len(venues),
-        "data": venue_list
-    }
+        venue_list.append({ "id": venue.id, "name": venue.name, "num_upcoming_shows": num_upcoming  })
+    response = { "count": len(venues), "data": venue_list }
     
     return render_template('pages/search_venues.html', results=response, search_term=search_term)
 
